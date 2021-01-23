@@ -4,6 +4,8 @@ const createError = require('http-errors');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const serveFavicon = require('serve-favicon');
+const mongoose = require('mongoose');
+const User = require('./models/user');
 
 const indexRouter = require('./routes/index');
 
@@ -22,13 +24,15 @@ app.use(
   sassMiddleware({
     src: join(__dirname, 'public'),
     dest: join(__dirname, 'public'),
-    outputStyle: process.env.NODE_ENV === 'development' ? 'nested' : 'compressed',
+    outputStyle:
+      process.env.NODE_ENV === 'development' ? 'nested' : 'compressed',
     force: process.env.NODE_ENV === 'development',
     sourceMap: true
   })
 );
 
 app.use('/', indexRouter);
+app.use('/sign-up', indexRouter);
 
 // Catch missing routes and forward to error handler
 app.use((req, res, next) => {
