@@ -50,7 +50,8 @@ router.post('/login', (req, res, next) => {
   User.findOne({
     userName: data.userName
   })
-    .then((user) => {
+    .then((doc) => {
+      user = doc;
       if (user) {
         return bcryptjs.compare(data.password, user.passwordHashAndSalt);
       } else {
