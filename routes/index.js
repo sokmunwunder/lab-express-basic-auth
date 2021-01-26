@@ -31,6 +31,10 @@ router.post('/sign-up', (req, res, next) => {
         passwordHashAndSalt: passwordHashAndSalt
       });
     })
+    .then((user) => {
+      req.session.userId = user._id;
+      res.redirect('/login');
+    })
     .catch((error) => {
       next(error);
     });
@@ -40,7 +44,31 @@ router.get('/login', (req, res, next) => {
   res.render('login');
 });
 
-router.post('/login', (req, res, next) => {});
+router.post('/login', (req, res, next) => {
+  const data = req.body;
+  let user;
+  User.findOne({
+    userName: data.userName
+  })
+    .then((user) => {
+      if (user) {
+        return bcryptjs.compare(data.password, user.passwordHashAndSalt);
+      } else {
+        throw new Error('The password is not correct');
+      }
+    })
+    .then((result) => {
+      if (result) {
+        req.session.userId = user._id;
+        res.redirect('/profile');
+      } else {
+        res.redirect('/login');
+      }
+    })
+    .catch((error) => {
+      next(error);
+    });
+});
 
 router.get('/profile', (req, res, next) => {
   res.render('profile');
