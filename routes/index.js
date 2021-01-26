@@ -36,4 +36,14 @@ router.post('/sign-up', (req, res, next) => {
     });
 });
 
+router.get('/login', (req, res, next) => {
+  res.render('login');
+});
+
+router.post('/login', (req, res, next) => {});
+
+router.get('/profile', (req, res, next) => {
+  res.render('profile');
+});
+
 module.exports = router;
